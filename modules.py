@@ -13,12 +13,12 @@ class Card:
             return 1, 11
 
     def __str__(self):
-        return f'{self.figure} of {self.color}'
+        return f'{self.figure}{self.color}'
 
 
 class Deck:
     FIGURES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-    COLORS = ['heart', 'spades', 'diamonds', 'clubs']
+    COLORS = ['\u2661 (hearts)', '\u2660 (spades)', '\u2666 (diamonds)', '\u2667 (clubs)']
 
     def __init__(self, num_of_decks=1):
         self.cards = []
