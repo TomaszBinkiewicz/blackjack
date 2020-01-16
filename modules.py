@@ -28,6 +28,56 @@ class Deck:
                     self.cards.append(Card(figure, color))
 
 
+class Player:
+    def __init__(self):
+        self.hand = []
+        self.hand_2 = []
+        self.bet = 0
+        self.bank = 0
+
+    def deposit_money(self, amount):
+        self.bank += amount
+
+    def draw_card(self, deck, hand=None):
+        if hand is None:
+            hand = self.hand
+        top_card = deck.pop()
+        hand.append(top_card)
+
+    def split(self):
+        self.hand_2.append(self.hand.pop())
+
+    def double(self):
+        self.bet += self.bet
+
+    @staticmethod
+    def count_hand_value(hand):
+        ret_val = 0
+        num_of_aces = 0
+        for card in hand:
+            if card.figure != 'A':
+                ret_val += card.value
+            else:
+                num_of_aces += 1
+        if num_of_aces != 0:
+            while num_of_aces > 1:
+                ret_val += 1
+                num_of_aces -= 1
+            if ret_val + 11 > 21:
+                ret_val += 1
+            else:
+                ret_val += 11
+        return ret_val
+
+    @property
+    def hand_value(self):
+        return self.count_hand_value(self.hand)
+
+    @property
+    def hand_2_value(self):
+        return self.count_hand_value(self.hand_2)
+
+
 if __name__ == '__main__':
     deck = Deck()
     for card in deck.cards:
