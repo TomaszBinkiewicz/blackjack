@@ -29,6 +29,7 @@ player.deposit_money(money)
 
 cont = None
 while cont != 'q' and len(deck) > 10:
+    blackjack = False
     # initial bet
     bet = None
     while not validate_pos_int(bet):
@@ -51,8 +52,8 @@ while cont != 'q' and len(deck) > 10:
     print(f'Your hand: {player.hand[0]} {player.hand[1]} Hand value: {player.hand_value}, bet: {player.bet}')
 
     # split decision
+    split_decision = None
     if player.hand[0].figure == player.hand[1].figure:
-        split_decision = None
         while split_decision not in ['yes', 'no']:
             split_decision = input('Do you want to split your cards? [yes/no]\n')
         if split_decision == 'yes':
@@ -62,53 +63,74 @@ while cont != 'q' and len(deck) > 10:
         elif split_decision == 'no':
             print('no changes')
 
-    # players turn
-    player_turn = None
-    while player_turn != 'stand':
-        player_turn = input('What do you want to do? [hit / stand / double]\n')
-        while player_turn not in ['hit', 'stand', 'double']:
-            player_turn = input('What do you want to do? [hit / stand / double]\n')
-        if player_turn == 'hit':
-            player.draw_card(deck)
-            print(f'Your hand: ', end='')
-            for card in player.hand:
-                print(card, end='')
-            print(f' Hand value: {player.hand_value}, bet: {player.bet}')
-        elif player_turn == 'double':
-            player.double()
-            print('Bet doubled')
-            player.draw_card(deck)
-            print(f'Your hand: ', end='')
-            for card in player.hand:
-                print(card, end='')
-            print(f' Hand value: {player.hand_value}, bet: {player.bet}')
-            break
-        if player.hand_value > 21:
-            break
-
-    # croupiers turn
-    print(f'Croupiers hand: {croupier.hand[0]} {croupier.hand[1]} Hand value: {croupier.hand_value}')
-    while croupier.hand_value < 17 and player.hand_value <= 21:
-        croupier.draw_card(deck)
+    # blackjack
+    if player.hand_value == 21:
+        blackjack = True
+        print('You got Blackjack!')
         print(f'Croupiers hand: ', end='')
         for card in croupier.hand:
             print(card, end='')
         print(f' Hand value: {croupier.hand_value}')
-    if player.hand_value > 21:
-        print('You busted!')
-        player.bet = 0
-    elif croupier.hand_value > 21 or player.hand_value > croupier.hand_value:
-        print('You won!')
-        player.deposit_money(2*player.bet)
-        player.bet = 0
-    elif player.hand_value == croupier.hand_value:
-        print('Draw')
-        player.deposit_money(player.bet)
-        player.bet = 0
-    else:
-        print('You lost!')
-        player.bet = 0
+        if croupier.hand_value != 21:
+            print('You won and the house is paying you 3 to 2 on your bet!')
+            player.deposit_money(2.5 * player.bet)
+            player.bet = 0
+        else:
+            print('Draw')
+            player.deposit_money(player.bet)
+            player.bet = 0
 
+    if not blackjack:
+        # players turn
+        player_turn = None
+        while player_turn != 'stand':
+            player_turn = input('What do you want to do? [hit / stand / double]\n')
+            while player_turn not in ['hit', 'stand', 'double']:
+                player_turn = input('What do you want to do? [hit / stand / double]\n')
+            if player_turn == 'hit':
+                player.draw_card(deck)
+                print(f'Your hand: ', end='')
+                for card in player.hand:
+                    print(card, end='')
+                print(f' Hand value: {player.hand_value}, bet: {player.bet}')
+            elif player_turn == 'double':
+                player.double()
+                print('Bet doubled')
+                player.draw_card(deck)
+                print(f'Your hand: ', end='')
+                for card in player.hand:
+                    print(card, end='')
+                print(f' Hand value: {player.hand_value}, bet: {player.bet}')
+                break
+            if player.hand_value > 21:
+                break
+
+        # croupiers turn
+        print(f'Croupiers hand: {croupier.hand[0]} {croupier.hand[1]} Hand value: {croupier.hand_value}')
+        while croupier.hand_value < 17 and player.hand_value <= 21:
+            croupier.draw_card(deck)
+            print(f'Croupiers hand: ', end='')
+            for card in croupier.hand:
+                print(card, end='')
+            print(f' Hand value: {croupier.hand_value}')
+
+        # results
+        if player.hand_value > 21:
+            print('You busted!')
+            player.bet = 0
+        elif croupier.hand_value > 21 or player.hand_value > croupier.hand_value:
+            print('You won!')
+            player.deposit_money(2*player.bet)
+            player.bet = 0
+        elif player.hand_value == croupier.hand_value:
+            print('Draw')
+            player.deposit_money(player.bet)
+            player.bet = 0
+        else:
+            print('You lost!')
+            player.bet = 0
+
+    # reset hands
     player.hand = []
     croupier.hand = []
     if player.bank == 0:
@@ -119,5 +141,4 @@ while cont != 'q' and len(deck) > 10:
     cont = input()
 
 # todo:
-#   blackjack
 #   split
