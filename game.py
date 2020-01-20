@@ -51,18 +51,6 @@ while cont != 'q' and len(deck) > 10:
     print(f'Croupiers hand: ?? {croupier.hand[1]}')
     print(f'Your hand: {player.hand[0]} {player.hand[1]} Hand value: {player.hand_value}, bet: {player.bet}')
 
-    # split decision
-    split_decision = None
-    if player.hand[0].figure == player.hand[1].figure:
-        while split_decision not in ['yes', 'no']:
-            split_decision = input('Do you want to split your cards? [yes/no]\n')
-        if split_decision == 'yes':
-            player.split()
-            print('Hand: ', player.hand[0])
-            print('Hand 2: ', player.hand_2[0])
-        elif split_decision == 'no':
-            print('no changes')
-
     # blackjack
     if player.hand_value == 21:
         blackjack = True
@@ -83,6 +71,20 @@ while cont != 'q' and len(deck) > 10:
         blackjack = True
         print('Dealer has blackjack!\nYou lost!')
         player.bet = 0
+
+    # split decision
+    split_decision = None
+    if player.hand[0].figure == player.hand[1].figure:
+        while split_decision not in ['yes', 'no']:
+            split_decision = input('Do you want to split your cards? [yes/no]\n')
+        if split_decision == 'yes':
+            split_decision = True
+            player.split()
+            print('Hand: ', player.hand[0])
+            print('Hand 2: ', player.hand_2[0])
+        elif split_decision == 'no':
+            split_decision = False
+            print('no changes')
 
     if not blackjack:
         # players turn
@@ -144,5 +146,3 @@ while cont != 'q' and len(deck) > 10:
     print('Press q to exit the game or any other to continue')
     cont = input()
 
-# todo:
-#   split
