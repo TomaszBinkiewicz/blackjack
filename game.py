@@ -74,7 +74,7 @@ while cont != 'q' and len(deck) > 10:
 
     # split decision
     split_decision = None
-    if player.hand[0].figure == player.hand[1].figure:
+    if not blackjack and player.hand[0].figure == player.hand[1].figure:
         while split_decision not in ['yes', 'no']:
             split_decision = input('Do you want to split your cards? [yes/no]\n')
         if split_decision == 'yes':
@@ -103,14 +103,20 @@ while cont != 'q' and len(deck) > 10:
                     print(card, end='')
                 print(f' Hand value: {player.hand_value}, bet: {player.bet}')
             elif player_turn == 'double':
-                player.double()
-                print('Bet doubled')
-                player.draw_card(deck)
-                print(f'Your hand: ', end='')
-                for card in player.hand:
-                    print(card, end='')
-                print(f' Hand value: {player.hand_value}, bet: {player.bet}')
-                break
+                if player.bet > player.bank:
+                    print("You don't have enough money to double the bet")
+                    for card in player.hand:
+                        print(card, end='')
+                    print(f' Hand value: {player.hand_value}, bet: {player.bet}')
+                else:
+                    player.double()
+                    print('Bet doubled')
+                    player.draw_card(deck)
+                    print(f'Your hand: ', end='')
+                    for card in player.hand:
+                        print(card, end='')
+                    print(f' Hand value: {player.hand_value}, bet: {player.bet}')
+                    break
             if player.hand_value > 21:
                 break
 
@@ -131,14 +137,20 @@ while cont != 'q' and len(deck) > 10:
                         print(card, end='')
                     print(f' Hand value: {player.hand_2_value}, bet: {player.bet_2}')
                 elif player_turn == 'double':
-                    player.double(bet=player.bet_2)
-                    print('Bet doubled')
-                    player.draw_card(deck, hand=player.hand_2)
-                    print(f'Your second hand: ', end='')
-                    for card in player.hand_2:
-                        print(card, end='')
-                    print(f' Hand value: {player.hand_2_value}, bet: {player.bet_2}')
-                    break
+                    if player.bet_2 > player.bank:
+                        print("You don't have enough money to double the bet")
+                        for card in player.hand_2:
+                            print(card, end='')
+                        print(f' Hand value: {player.hand_2_value}, bet: {player.bet_2}')
+                    else:
+                        player.double(bet=player.bet_2)
+                        print('Bet doubled')
+                        player.draw_card(deck, hand=player.hand_2)
+                        print(f'Your second hand: ', end='')
+                        for card in player.hand_2:
+                            print(card, end='')
+                        print(f' Hand value: {player.hand_2_value}, bet: {player.bet_2}')
+                        break
                 if player.hand_2_value > 21:
                     break
 
