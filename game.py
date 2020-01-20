@@ -79,6 +79,10 @@ while cont != 'q' and len(deck) > 10:
             print('Draw')
             player.deposit_money(player.bet)
             player.bet = 0
+    if not blackjack and croupier.hand_value == 21:
+        blackjack = True
+        print('Dealer has blackjack!\nYou lost!')
+        player.bet = 0
 
     if not blackjack:
         # players turn
