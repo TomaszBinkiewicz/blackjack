@@ -69,7 +69,7 @@ while cont != 'q' and len(deck) > 10:
             player.bet = 0
     if not blackjack and croupier.hand_value == 21:
         blackjack = True
-        print('Dealer has blackjack!\nYou lost!')
+        print(f'\nDealer has blackjack!\nCroupiers hand: {croupier.hand[0]} {croupier.hand[1]}\nYou lost!')
         player.bet = 0
 
     # split decision
@@ -80,8 +80,11 @@ while cont != 'q' and len(deck) > 10:
         if split_decision == 'yes':
             split_decision = True
             player.split()
-            print('Hand: ', player.hand[0])
-            print('Hand 2: ', player.hand_2[0])
+            player.draw_card(deck)
+            player.draw_card(deck, hand=player.hand_2)
+            print(f'Hand: {player.hand[0]} {player.hand[1]} Hand value: {player.hand_value}, bet: {player.bet}')
+            print(f'Second hand: {player.hand_2[0]} {player.hand_2[1]} Hand value: {player.hand_2_value}, bet: {player.bet_2}')
+            print(f'\nHand: {player.hand[0]} {player.hand[1]} Hand value: {player.hand_value}, bet: {player.bet}')
         elif split_decision == 'no':
             split_decision = False
             print('no changes')
@@ -111,9 +114,37 @@ while cont != 'q' and len(deck) > 10:
             if player.hand_value > 21:
                 break
 
+        if split_decision:
+            player_turn = None
+            print(f'Your second hand: ', end='')
+            for card in player.hand_2:
+                print(card, end='')
+            print(f' Hand value: {player.hand_2_value}, bet: {player.bet_2}')
+            while player_turn != 'stand':
+                player_turn = input('What do you want to do? [hit / stand / double]\n')
+                while player_turn not in ['hit', 'stand', 'double']:
+                    player_turn = input('What do you want to do? [hit / stand / double]\n')
+                if player_turn == 'hit':
+                    player.draw_card(deck, hand=player.hand_2)
+                    print(f'Your second hand: ', end='')
+                    for card in player.hand_2:
+                        print(card, end='')
+                    print(f' Hand value: {player.hand_2_value}, bet: {player.bet_2}')
+                elif player_turn == 'double':
+                    player.double(bet=player.bet_2)
+                    print('Bet doubled')
+                    player.draw_card(deck, hand=player.hand_2)
+                    print(f'Your second hand: ', end='')
+                    for card in player.hand_2:
+                        print(card, end='')
+                    print(f' Hand value: {player.hand_2_value}, bet: {player.bet_2}')
+                    break
+                if player.hand_2_value > 21:
+                    break
+
         # croupiers turn
         print(f'Croupiers hand: {croupier.hand[0]} {croupier.hand[1]} Hand value: {croupier.hand_value}')
-        while croupier.hand_value < 17 and player.hand_value <= 21:
+        while croupier.hand_value < 17 and player.hand_value <= 21 and player.hand_2_value <= 21:
             croupier.draw_card(deck)
             print(f'Croupiers hand: ', end='')
             for card in croupier.hand:
@@ -135,6 +166,22 @@ while cont != 'q' and len(deck) > 10:
         else:
             print('You lost!')
             player.bet = 0
+        if split_decision:
+            print('Second hand result:')
+            if player.hand_2_value > 21:
+                print('You busted!')
+                player.bet_2 = 0
+            elif croupier.hand_value > 21 or player.hand_2_value > croupier.hand_value:
+                print('You won!')
+                player.deposit_money(2 * player.bet_2)
+                player.bet_2 = 0
+            elif player.hand_2_value == croupier.hand_value:
+                print('Draw')
+                player.deposit_money(player.bet_2)
+                player.bet_2 = 0
+            else:
+                print('You lost!')
+                player.bet_2 = 0
 
     # reset hands
     player.hand = []
@@ -145,4 +192,3 @@ while cont != 'q' and len(deck) > 10:
     print(f'\nYour money: {player.bank}')
     print('Press q to exit the game or any other to continue')
     cont = input()
-

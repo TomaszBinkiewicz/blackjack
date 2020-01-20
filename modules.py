@@ -33,6 +33,7 @@ class Player:
         self.hand = []
         self.hand_2 = []
         self.bet = 0
+        self.bet_2 = 0
         self.bank = 0
 
     def deposit_money(self, amount):
@@ -46,9 +47,15 @@ class Player:
 
     def split(self):
         self.hand_2.append(self.hand.pop())
+        self.bet_2 = self.bet
 
-    def double(self):
-        self.bet += self.bet
+    def double(self, bet=None):
+        if bet is None:
+            self.bet += self.bet
+            self.bank -= self.bet
+        else:
+            self.bet_2 += self.bet_2
+            self.bank -= self.bet_2
 
     @staticmethod
     def count_hand_value(hand):
