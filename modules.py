@@ -48,6 +48,7 @@ class Player:
     def split(self):
         self.hand_2.append(self.hand.pop())
         self.bet_2 = self.bet
+        self.bank -= self.bet_2
 
     def double(self, bet=None):
         if bet is None:
