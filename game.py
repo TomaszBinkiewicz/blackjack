@@ -3,12 +3,6 @@ from random import shuffle
 from validators import validate_pos_int
 
 
-# prepare table
-deck = Deck(num_of_decks=6)
-deck = deck.cards
-shuffle(deck)
-croupier = Player()
-
 welcome_message = '''
 Welcome to blackjack!
 In this game you'll play against the dealer.
@@ -19,6 +13,13 @@ while A can be 1 or 11, whatever is better for the hand.
 
 print(welcome_message)
 
+# prepare table
+deck = Deck(num_of_decks=6)
+deck = deck.cards
+reshuffle = len(deck) * 0.75
+shuffle(deck)
+croupier = Player()
+
 # prepare player
 player = Player()
 money = None
@@ -28,7 +29,7 @@ money = int(money)
 player.deposit_money(money)
 
 cont = None
-while cont != 'q' and len(deck) > 10:
+while cont != 'q':
     blackjack = False
     # initial bet
     bet = None
@@ -204,3 +205,9 @@ while cont != 'q' and len(deck) > 10:
     print(f'\nYour money: {player.bank}')
     print('Press q to exit the game or any other to continue')
     cont = input()
+
+    if len(deck) <= reshuffle:
+        print('Deck is being reshuffled')
+        deck = Deck(num_of_decks=6)
+        deck = deck.cards
+        shuffle(deck)
