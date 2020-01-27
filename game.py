@@ -1,7 +1,7 @@
 from modules import Deck, Player
 from random import shuffle
 from validators import validate_pos_int
-
+from time import sleep
 
 welcome_message = '''
 Welcome to blackjack!
@@ -56,6 +56,7 @@ while cont != 'q':
     if player.hand_value == 21:
         blackjack = True
         print('You got Blackjack!')
+        sleep(3)
         print(f'Croupiers hand: ', end='')
         for card in croupier.hand:
             print(card, end='')
@@ -71,6 +72,7 @@ while cont != 'q':
     if not blackjack and croupier.hand_value == 21:
         blackjack = True
         print(f'\nDealer has blackjack!\nCroupiers hand: {croupier.hand[0]} {croupier.hand[1]}\nYou lost!')
+        sleep(3)
         player.bet = 0
 
     # split decision
@@ -208,6 +210,7 @@ while cont != 'q':
 
     if len(deck) <= reshuffle:
         print('Deck is being reshuffled')
+        sleep(3)
         deck = Deck(num_of_decks=6)
         deck = deck.cards
         shuffle(deck)
