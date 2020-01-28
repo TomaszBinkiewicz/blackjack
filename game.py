@@ -169,34 +169,28 @@ while cont != 'q':
         # results
         if player.hand_value > 21:
             print('You busted!')
-            player.bet = 0
         elif croupier.hand_value > 21 or player.hand_value > croupier.hand_value:
             print('You won!')
             player.deposit_money(2*player.bet)
-            player.bet = 0
         elif player.hand_value == croupier.hand_value:
             print('Draw')
             player.deposit_money(player.bet)
-            player.bet = 0
         else:
             print('You lost!')
-            player.bet = 0
+        player.bet = 0
         if split_decision:
             print('Second hand result:')
             if player.hand_2_value > 21:
                 print('You busted!')
-                player.bet_2 = 0
             elif croupier.hand_value > 21 or player.hand_2_value > croupier.hand_value:
                 print('You won!')
                 player.deposit_money(2 * player.bet_2)
-                player.bet_2 = 0
             elif player.hand_2_value == croupier.hand_value:
                 print('Draw')
                 player.deposit_money(player.bet_2)
-                player.bet_2 = 0
             else:
                 print('You lost!')
-                player.bet_2 = 0
+            player.bet_2 = 0
 
     # reset hands
     player.hand = []
