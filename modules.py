@@ -58,6 +58,23 @@ class Player:
             self.bet_2 += self.bet_2
             self.bank -= self.bet_2
 
+    def print_hand(self, hand=None):
+        if hand is None:
+            hand = self.hand
+        print(f'Hand: ', end='')
+        for card in hand:
+            print(card, end='')
+        if hand == self.hand:
+            print(f' Hand value: {self.hand_value}, bet: {self.bet}')
+        elif hand == self.hand_2:
+            print(f' Second hand value: {self.hand_2_value}, bet: {self.bet_2}')
+
+    def print_croupiers_hand(self):
+        print(f'Croupiers hand: ', end='')
+        for card in self.hand:
+            print(card, end='')
+        print(f' Hand value: {self.hand_value}')
+
     @staticmethod
     def count_hand_value(hand):
         ret_val = 0
