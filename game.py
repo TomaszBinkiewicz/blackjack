@@ -1,4 +1,4 @@
-from modules import Deck, Player
+from modules import Deck, Player, player_turn
 from random import shuffle
 from validators import validate_pos_int
 from time import sleep
@@ -95,48 +95,12 @@ while cont != 'q':
 
     if not blackjack:
         # players turn
-        player_turn = None
-        double = False
-        while player_turn != 'stand':
-            player_turn = None
-            while player_turn not in ['hit', 'stand', 'double']:
-                player_turn = input('What do you want to do? [hit / stand / double]\n')
-            if player_turn == 'hit':
-                player.draw_card(deck)
-            elif player_turn == 'double':
-                if player.bet > player.bank:
-                    print("You don't have enough money to double the bet")
-                else:
-                    double = True
-                    player.double()
-                    print('Bet doubled')
-                    player.draw_card(deck)
-            if player_turn != 'stand':
-                player.print_hand(hand=player.hand)
-            if double or player.hand_value > 21:
-                break
+        player_turn(deck=deck, player=player, hand=player.hand)
 
         if split_decision:
+            print('Second hand')
             player.print_hand(hand=player.hand_2)
-            player_turn = None
-            double = False
-            while player_turn != 'stand':
-                player_turn = None
-                while player_turn not in ['hit', 'stand', 'double']:
-                    player_turn = input('What do you want to do? [hit / stand / double]\n')
-                if player_turn == 'hit':
-                    player.draw_card(deck, hand=player.hand_2)
-                elif player_turn == 'double':
-                    if player.bet_2 > player.bank:
-                        print("You don't have enough money to double the bet")
-                    else:
-                        double = True
-                        player.double(bet=player.bet_2)
-                        print('Bet doubled')
-                        player.draw_card(deck, hand=player.hand_2)
-                player.print_hand(hand=player.hand_2)
-                if double or player.hand_2_value > 21:
-                    break
+            player_turn(deck=deck, player=player, hand=player.hand_2, bet=player.bet_2)
 
         # croupiers turn
         croupier.print_croupiers_hand()
@@ -150,7 +114,7 @@ while cont != 'q':
             print('You busted!')
         elif croupier.hand_value > 21 or player.hand_value > croupier.hand_value:
             print('You won!')
-            player.deposit_money(2*player.bet)
+            player.deposit_money(2 * player.bet)
         elif player.hand_value == croupier.hand_value:
             print('Draw')
             player.deposit_money(player.bet)

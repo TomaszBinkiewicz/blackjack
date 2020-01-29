@@ -103,6 +103,29 @@ class Player:
         return self.count_hand_value(self.hand_2)
 
 
+def player_turn(deck, player, hand, bet=None):
+    player_turn = None
+    double = False
+    while player_turn != 'stand':
+        player_turn = None
+        while player_turn not in ['hit', 'stand', 'double']:
+            player_turn = input('What do you want to do? [hit / stand / double]\n')
+        if player_turn == 'hit':
+            player.draw_card(deck, hand)
+        elif player_turn == 'double':
+            if player.bet > player.bank:
+                print("You don't have enough money to double the bet")
+            else:
+                double = True
+                player.double(bet)
+                print('Bet doubled')
+                player.draw_card(deck, hand)
+        if player_turn != 'stand':
+            player.print_hand(hand=hand)
+        if double or player.hand_value > 21:
+            break
+
+
 if __name__ == '__main__':
     deck = Deck()
     for card in deck.cards:
