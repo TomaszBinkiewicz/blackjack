@@ -52,11 +52,11 @@ class Player:
 
     def double(self, bet=None):
         if bet is None:
-            self.bet += self.bet
             self.bank -= self.bet
+            self.bet += self.bet
         else:
-            self.bet_2 += self.bet_2
             self.bank -= self.bet_2
+            self.bet_2 += self.bet_2
 
     def print_hand(self, hand=None):
         if hand is None:
